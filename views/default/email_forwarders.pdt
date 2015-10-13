@@ -1,0 +1,117 @@
+<div role="tabpanel">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#emailforwarders_area" aria-controls="emailforwarders_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.emailforwarders");?></a></li>
+        <li role="presentation"><a href="#domainforwarders_area" aria-controls="domainforwarders_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.emaildomainforwarders");?></a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="emailforwarders_area">
+            <div class="page-header">
+                <h4><?php $this->_("tastycpanel.emailforwarders");?> <button type="button" id="add_new_email" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php $this->_("tastycpanel.email.email_address");?></th>
+                            <th><?php $this->_("tastycpanel.email.forwardto");?></th>
+                            <th><?php $this->_("tastycpanel.options");?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+     <?php 
+     if(count($emailf_list) > 0 ) {
+     foreach ($emailf_list as $key => $value) {
+    
+ ?>
+                        <tr>
+                            <td><?php $this->Html->_($emailf_list[$key]->dest);?></td>
+                            <td><?php $this->Html->_($emailf_list[$key]->forward);?></td>
+                            <td>  
+                                                <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("email", $this->Html->ifSet($emailf_list[$key]->dest), array('id'=>"email"));
+                            $this->Form->fieldHidden("emaildest", $this->Html->ifSet($emailf_list[$key]->forward), array('id'=>"emaildest"));
+                            ?> 
+                                <button type="submit" name="delete_emailforwarder" class="btn btn-default btn-xs">
+                                    <i class="fa fa-ban"></i> <?php $this->_("tastycpanel.delete");?>
+                                </button>
+                            <?php $this->Form->end(); ?>
+                            </td>
+                        </tr>
+				<?php
+     } } else {
+?>
+                        <tr>
+                            <td colspan="3" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+                        </tr>
+            <?php
+     }			?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="domainforwarders_area">
+            <div class="page-header">
+                <h4><?php $this->_("tastycpanel.emaildomainforwarders");?> <button type="button" id="add_newdforward" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;"><?php $this->_("tastycpanel.email.domain");?></th>
+                            <th><?php $this->_("tastycpanel.email.forwardto");?></th>
+                            <th><?php $this->_("tastycpanel.options");?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+     <?php 
+     if(count($emaild_list) > 0 ) {
+     foreach ($emaild_list as $key => $value) {
+    
+ ?>
+                        <tr>
+                            <td><?php $this->Html->_($emaild_list[$key]->dest);?></td>
+                            <td><?php $this->Html->_($emaild_list[$key]->forward);?></td>
+                            <td>  
+                                                <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("domain", $this->Html->ifSet($emaild_list[$key]->dest), array('id'=>"domain"));
+                            ?> 
+                                <button type="submit" name="delete_domainforwarder" class="btn btn-default btn-xs">
+                                    <i class="fa fa-ban"></i> <?php $this->_("tastycpanel.delete");?>
+                                </button>
+                            <?php $this->Form->end(); ?>
+                            </td>
+                        </tr>
+				<?php
+     } } else {
+?>
+                        <tr>
+                            <td colspan="3" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+                        </tr>
+            <?php
+     }			?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#add_new_email").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/emailforwarders/addnew/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.emailforwarders");?>");
+                    });
+                    $("#add_newdforward").click(function () {
+                        doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/emailforwarders/addnewdomainforward/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.emaildomainforwarder");?>");
+                                });
+                            });
+</script>

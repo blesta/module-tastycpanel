@@ -1,0 +1,80 @@
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.accountusage");?></h4>
+</div>
+
+<?php 
+$i = 0;
+foreach ($stats as $key => $value) {
+  if($stats[$key]['value'] !== null && $stats[$key]['max'] == null) {
+           if($i == 0){
+?>
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><?php $this->_("tastycpanel.field");?></th>
+                <th><?php $this->_("tastycpanel.value");?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php $this->_("tastycpanel.service.domain");?></td>
+                <td><?php $this->Html->_($service_fields->domain_name);?></td>
+            </tr>
+            <?php 
+            $num = 1;
+            if(isset ($name_servers) && count($name_servers) > 0){
+            foreach ($name_servers as $nmkey => $nmvalue) {
+            ?>
+            <tr>
+                <td><?php $this->_("tastycpanel.service.name_server");echo " ".$num; ?></td>
+                <td><?php $this->Html->_($name_servers[$nmkey]);?></td>
+            </tr>
+            <?php $num++;} } ?>
+     <?php } ?>
+            <tr>
+                <td><?php $this->Html->_($stats[$key]['name']);?></td>
+                <td><?php $this->Html->_($stats[$key]['value']);?></td>
+            </tr>
+				<?php
+                        if($i == 5){
+			?>
+        </tbody>
+    </table>
+</div>
+
+<hr />
+<div class="clearfix"></div>
+<div class="text-align:center;">
+    <div class="btn-group loginforms" role="group">
+            <?php if($type == "reseller"){ ?>
+						<?php $this->Form->create(null, array('target' => "_blank")); ?>
+        <button type="submit" name="whostmgrd" class="btn btn-sm btn-default"><i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.whm_login");?></button>
+						<?php $this->Form->end(); ?>
+        <?php } ?>
+						<?php $this->Form->create(null, array('target' => "_blank")); ?>
+        <button type="submit" name="cpaneld" class="btn btn-sm btn-default"><i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.cpanel_login");?></button>
+        <button type="submit" name="webmaild" class="btn btn-sm btn-default"><i class="fa fa-envelope-o"></i> <?php $this->_("tastycpanel.webmail_login");?></button>
+        <button type="submit" name="cpaneld" value="phpmyadmin" class="btn btn-sm btn-default"><i class="fa fa-database"></i> <?php $this->_("tastycpanel.phpmyadmin_login");?></button>
+        <button type="submit" name="cpaneld" value="filemanager" class="btn btn-sm btn-default"><i class="fa fa-file"></i> <?php $this->_("tastycpanel.filemanager_login");?></button>
+						<?php $this->Form->end(); ?>
+    </div>
+</div>
+<div class="clearfix"></div>
+<hr />
+<?php 
+  }
+  } else if($stats[$key]['value'] == null && $stats[$key]['max'] !== null) { 
+?>
+<p><strong><?php $this->Html->_($stats[$key]['name']);?>: <span class="badge"><?php $this->Html->_($stats[$key]['count']);?> / <?php $this->Html->_($stats[$key]['max']);?></span></strong></p>
+<div class="progress">
+    <div class="progress-bar progress-bar-striped active <?php $this->Html->_($stats[$key]['class']);?>" role="progressbar" aria-valuenow="<?php $this->Html->_($stats[$key]['percent']);?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php $this->Html->_($stats[$key]['percent']);?>%;">
+    </div>
+</div>
+<?php
+                       
+  }
+  $i++;
+}
+
+?>

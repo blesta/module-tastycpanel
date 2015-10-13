@@ -1,0 +1,83 @@
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.email");?> <button type="button" id="add_new" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+</div>
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><?php $this->_("tastycpanel.email.email_address");?></th>
+                <th><?php $this->_("tastycpanel.email.usage");?> / <?php $this->_("tastycpanel.email.quota");?></th>
+                <th><?php $this->_("tastycpanel.options");?></th>
+            </tr>
+        </thead>
+        <tbody>
+     <?php 
+     if(count($email_list) > 0 ) {
+     foreach ($email_list as $key => $value) {
+    
+ ?>
+            <tr>
+                <td><?php $this->Html->_($email_list[$key]->login);?></td>
+                <td><?php $this->Html->_($email_list[$key]->diskused);?> / <?php $this->Html->_($email_list[$key]->diskquota);?></td>
+                <td>  
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.options");?>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+	<?php
+						$this->Form->create($this->Html->safe("https://" . $this->Html->ifSet($module_row->meta->hostname) . ":2083/login/"), array('target' => "_blank"));
+						$this->Form->fieldHidden("user", $this->Html->ifSet($service_fields->username));
+						$this->Form->fieldHidden("pass", $this->Html->ifSet($service_fields->password));
+                                                $this->Form->fieldHidden("goto_uri", "/frontend/x3/mail/webmailform.html?user={$email_list[$key]->login}&domain={$email_list[$key]->domain}");
+						?>
+                            <li><button class="buttonlink" type="submit"><?php $this->_("tastycpanel.email.access_webmail");?></button></li>
+						<?php
+						$this->Form->end();
+						?>
+                            <li class="changequota"><a href="javascript:void(0)" id="<?php echo $email_list[$key]->domain;?>" class="<?php echo $email_list[$key]->user;?>"><?php $this->_("tastycpanel.email.changequota");?></a></li>
+                            <li class="changepass"><a href="javascript:void(0)" id="<?php echo $email_list[$key]->domain;?>" class="<?php echo $email_list[$key]->user;?>"><?php $this->_("tastycpanel.changepassword");?></a></li>
+                            <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("domain", $this->Html->ifSet($email_list[$key]->domain), array('id'=>"domain"));
+                            $this->Form->fieldHidden("email", $this->Html->ifSet($email_list[$key]->user), array('id'=>"email"));
+                            ?> 
+                            <li><button class="buttonlink" name="delete_email" type="submit"><?php $this->_("tastycpanel.delete");?></button></li>
+                            <?php $this->Form->end(); ?>
+
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+				<?php
+     } } else {
+?>
+            <tr>
+                <td colspan="3" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+            </tr>
+            <?php
+     }			?>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("li.changequota a").click(function () {
+            var domain = $(this).attr('id');
+            var email = $(this).attr('class');
+            var url_get = "domain=" + domain + "&email=" + email;
+            doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/email/changequota/";?>", "<?php $this->_("tastycpanel.email");?>", url_get);
+        });
+        $("#add_new").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/email/addnew/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.email");?>");
+                    });
+                    $("li.changepass a").click(function () {
+                        var domain = $(this).attr('id');
+                        var email = $(this).attr('class');
+                        var url_get = "domain=" + domain + "&email=" + email;
+                        doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/email/changepassword/";?>", "<?php $this->_("tastycpanel.email");?>", url_get);
+                    });
+                });
+</script>

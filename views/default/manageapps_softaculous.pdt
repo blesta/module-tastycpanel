@@ -1,0 +1,171 @@
+<div role="tabpanel">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#apps_area" aria-controls="apps_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.manageapps");?></a></li>
+        <li role="presentation"><a href="#backups_area" aria-controls="backups_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.manageapps.list_backups");?></a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="apps_area">
+            <div class="page-header">
+                <h4><?php $this->_("tastycpanel.manageapps");?> <button type="button" id="add_new" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.manageapps.new_install");?></button></h4>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php $this->_("tastycpanel.manageapps.script_type");?></th>
+                            <th><?php $this->_("tastycpanel.manageapps.script_url");?></th>
+                            <th><?php $this->_("tastycpanel.manageapps.script_db");?></th>
+                            <th><?php $this->_("tastycpanel.manageapps.script_version");?></th>
+                            <th><?php $this->_("tastycpanel.options");?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+     <?php 
+     if(count($installations) > 0 ) {
+                        foreach ($installations as $key => $value) {
+                            foreach ($installations[$key] as $inid => $insval) {
+                  
+				?>
+                        <tr>
+                            <td><?php
+                            if(!empty($listscripts)){
+                          echo $listscripts[$installations[$key][$inid]['sid']]["name"]." / ".$listscripts[$installations[$key][$inid]['sid']]["type"];
+                            }
+                            ?>
+                            </td>
+                            <td><a href="<?php echo $installations[$key][$inid]['softurl']; ?>" target="_blank"><?php echo $installations[$key][$inid]['softurl']; ?></a></td>
+                            <td><?php echo $installations[$key][$inid]['softdb']; ?></td>
+                            <td><?php echo $installations[$key][$inid]['ver']; ?></td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.options");?>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                            <?php $this->Form->create("",array('id'=>"upgradeinstall","class"=>"hrefform"));
+                            $this->Form->fieldHidden("installid", "{$installations[$key][$inid]['insid']}", array());
+                            ?>
+                                            <button type="submit" class="buttonlink" name="submitupgrade"><?php $this->_("tastycpanel.manageapps.make_upgrade");?></button>
+                            <?php $this->Form->end(); ?>
+                                        </li>
+                                        <li>
+                            <?php $this->Form->create("",array('id'=>"createbu","class"=>"hrefform"));
+                            $this->Form->fieldHidden("installid", "{$installations[$key][$inid]['insid']}", array());
+                            ?>
+                                            <button type="submit" class="buttonlink" name="submitmakebu"><?php $this->_("tastycpanel.manageapps.make_backup");?></button>
+                            <?php $this->Form->end(); ?>
+                                        </li>
+                                        <li>
+                            <?php $this->Form->create("",array('id'=>"deleteinstall","class"=>"hrefform"));
+                            $this->Form->fieldHidden("installid", "{$installations[$key][$inid]['insid']}", array());
+                            ?>
+                                            <button type="submit" class="buttonlink" name="submitdeleteinstall"><?php $this->_("tastycpanel.delete");?></button>
+                            <?php $this->Form->end(); ?>
+                                        </li>
+                                    </ul>
+                                </div>                        
+
+
+                            </td>
+
+				<?php
+     } } } else {
+?>
+                        <tr>
+                            <td colspan="6" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+                        </tr>
+            <?php
+     }			?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="backups_area">
+
+            <div class="page-header">
+                <h4><?php $this->_("tastycpanel.manageapps.list_backups");?></h4>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php $this->_("tastycpanel.manageapps.backup_of");?></th>
+                            <th><?php $this->_("tastycpanel.manageapps.file_name");?></th>
+                            <th><?php $this->_("tastycpanel.options");?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+			<?php
+                        if(count($result_backups) > 0 ) {
+                            foreach ($result_backups as $key => $value) {
+                            foreach ($result_backups[$key] as $inid => $insval) {
+                               foreach ($result_backups[$key][$inid] as $bid => $bval) {
+    
+
+				?>
+                        <tr>
+                            <td><a href="<?php echo $result_backups[$key][$inid][$bid]['softurl']; ?>" target="_blank"><?php echo $result_backups[$key][$inid][$bid]['softurl']; ?></a></td>
+                            <td>
+                       <?php echo $result_backups[$key][$inid][$bid]['name']; ?>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.options");?>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                    <?php $this->Form->create("",array('id'=>"restorebackup","class"=>"hrefform"));
+                                    $this->Form->fieldHidden("filename", "{$result_backups[$key][$inid][$bid]['name']}", array());
+                                    ?>
+                                            <button type="submit" class="buttonlink" name="submitrestorebu"><?php $this->_("tastycpanel.manageapps.restore_backup");?></button>
+                                    <?php $this->Form->end(); ?>
+                                        </li>
+                                        <li>
+                                    <?php $this->Form->create("",array('id'=>"removebu","class"=>"hrefform"));
+                                    $this->Form->fieldHidden("filename", "{$result_backups[$key][$inid][$bid]['name']}", array());
+                                    ?>
+                                            <button type="submit"  class="buttonlink" name="submitremovebu"><?php $this->_("tastycpanel.manageapps.remove_backup");?></button>
+                                    <?php $this->Form->end(); ?>
+                                        </li>
+                                    </ul>
+                                </div>                        
+                            </td>
+
+                        </tr>
+				<?php
+                        }
+                          }
+                             } 
+                                    } else {
+                                        ?>
+                        <tr>
+                            <td colspan="5" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+                        </tr>
+            <?php
+     }			?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#add_new").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/manageapps/installapps/";?>", "<?php $this->_("tastycpanel.manageapps.new_install");?>");
+        });
+    });
+</script>

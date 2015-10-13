@@ -1,0 +1,28 @@
+
+<table class="table">
+    <tr class="heading_row">
+        <td><?php $this->_("tastycpanel.field");?></td>
+        <td><?php $this->_("tastycpanel.value");?></td>
+    </tr>
+    <tr>
+        <td><?php $this->_("tastycpanel.service.domain");?></td>
+        <td><?php $this->Html->_($service_fields->domain_name);?></td>
+    </tr>
+<?php 
+$i = 0;
+foreach ($stats as $key => $value) {
+?>
+    <tr<?php echo $this->Html->concat(" ", ($key%2 == 1) ? " class=\"odd_row\"" : "", "");?>>
+        <td><?php $this->Html->_($stats[$key]['name']);?></td>
+        <td>
+        <?php 
+        if($stats[$key]['value'] == null && $stats[$key]['max'] !== null) {
+            $this->Html->_($stats[$key]['count']);echo '/';$this->Html->_($stats[$key]['max']);
+            } else {
+                $this->Html->_($stats[$key]['value']);
+            }
+            ?>
+        </td>
+    </tr>
+<?php } ?>
+</table>

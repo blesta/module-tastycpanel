@@ -1,0 +1,124 @@
+        <?php
+		$this->Widget->clear();
+		$this->Widget->setLinkButtons(array());
+		$this->Widget->create($this->_("tastycpanel.add_module_row", true));
+		?>
+<div class="inner">
+			<?php
+			$this->Form->create();
+			?>
+    <div class="pad">
+        <ul>
+            <li>
+                        <?php
+						$this->Form->label($this->_("tastycpanel.row.hostname", true), "hostname");
+						$this->Form->fieldText("hostname", $this->Html->ifSet($vars->hostname), array('id' => "hostname"));
+						?>
+            </li>
+            <li>
+                        <?php
+						$this->Form->label($this->_("tastycpanel.row.username", true), "username");
+						$this->Form->fieldText("username", $this->Html->ifSet($vars->username), array('id' => "username"));
+						?>
+            </li>
+            <li>
+                        <?php
+						$this->Form->label($this->_("tastycpanel.row.accesskey", true), "accesskey");
+						$this->Form->fieldTextarea("accesskey", $this->Html->ifSet($vars->accesskey), array('id' => "accesskey"));
+						?>
+            </li>
+            <li>
+                        <?php
+						$this->Form->label($this->_("tastycpanel.row.accountlimit", true), "accountlimit");
+						$this->Form->fieldText("accountlimit", $this->Html->ifSet($vars->accountlimit), array('id' => "accountlimit"));
+						?>
+            </li> 
+            <li>
+						<?php
+						$this->Form->fieldCheckbox("use_ssl", "true", $this->Html->ifSet($vars->use_ssl, "true") == "true", array('id'=>"use_ssl"));
+						$this->Form->label($this->_("tastycpanel.row_meta.use_ssl", true), "use_ssl", array('class'=>"inline"));
+						?>
+					</li>
+
+            <li style="clear:both;"></li>
+            <li>
+            <div style="clear:both;"></div>
+				<div class="links_row">
+					<a class="btn_right ns_row_add" href="#"><span><?php $this->_("tastycpanel.row.name_server_btn");?></span></a>
+				</div>
+            <div style="clear:both;"></div>
+				<table class="table">
+					<thead>
+						<tr class="heading_row">
+							<td><?php $this->Form->label($this->_("tastycpanel.row.name_server_col", true));?></td>
+							<td><?php $this->Form->label($this->_("tastycpanel.row.name_server_host_col", true));?></td>
+							<td class="last"></td>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						$num_servers = count($this->Html->ifSet($vars->name_servers));
+						for ($i=0; $i<max(2,$num_servers); $i++) {
+						?>
+						<tr class="ns_row<?php echo ($i%2 == 1) ? " odd_row" : "";?>">
+							<td><?php $this->_("tastycpanel.row.name_server", false, "<span>" . ($i+1) . "</span>");?></td>
+							<td><?php $this->Form->fieldText("name_servers[]", $this->Html->ifSet($vars->name_servers[$i]));?></td>
+							<td><a href="#" class="manage ns_row_remove"><?php $this->_("tastycpanel.add_row.remove_name_server");?></a></td>
+						</tr>
+						<?php
+						}
+						?>
+					</tbody>
+				</table>
+            </li>
+        </ul>
+    </div>
+
+    <div class="button_row">
+        <a class="btn_right submit" href="#"><?php $this->_("tastycpanel.manage.module_groups.edit");?></a>
+    </div>
+			<?php
+			$this->Form->end();
+			?>
+</div>
+		<?php
+		$this->Widget->end();
+		?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// Add a row
+	$('.ns_row_add').click(function() {
+		var fields = $('tr.ns_row:first').clone(true);
+		$(fields).find('input').val('');
+		$('td:first span', fields).text($('tr.ns_row').length+1);
+		$('tr.ns_row:last').after(fields);
+		updateNsRows();
+		return false;
+	});
+	// Remove a row
+	$('.ns_row_remove').click(function() {
+		if ($('tr.ns_row').length > 1) {
+			$(this).closest('tr').remove();
+			// Reorder the counts for these rows
+			$i=1;
+			$('tr.ns_row').each(function() {
+				$('td:first span', this).text($i++);
+			});
+		}
+		updateNsRows();
+		return false;
+	});
+});
+
+// Zebra-stripe pricing rows
+function updateNsRows() {
+	var i = 0;
+	$('tr.ns_row').each(function() {
+		if (i++%2 == 1)
+			$(this).addClass('odd_row');
+		else
+			$(this).removeClass('odd_row');
+	});
+}
+</script>

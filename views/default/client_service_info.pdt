@@ -1,0 +1,42 @@
+	
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><i class="fa fa-share fa-flip-vertical"></i></th>
+                <th><?php $this->_("tastycpanel.service.username");?></th>
+                <th><?php $this->_("tastycpanel.service.password");?></th>
+                <th><?php $this->_("tastycpanel.row.hostname");?></th>
+                <th><?php $this->_("tastycpanel.manage.module_rows_heading.options");?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td><?php $this->Html->_($service_fields->username);?></td>
+                <td>****</td>
+                <td><?php $this->Html->_($module_row->meta->hostname);?></td>
+                <td>
+						<?php
+						$this->Form->create($this->Html->safe("https://" . $this->Html->ifSet($module_row->meta->hostname) . ":2083/login/"), array('target' => "_blank"));
+						$this->Form->fieldHidden("user", $this->Html->ifSet($service_fields->username));
+						$this->Form->fieldHidden("pass", $this->Html->ifSet($service_fields->password));
+						?>
+                    <a id="cpanel_login<?php $this->Html->_($service->id);?>" href="#"><?php $this->_("tastycpanel.service.option_login");?></a>
+						<?php
+						$this->Form->end();
+						?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#cpanel_login<?php $this->Html->_($service->id);?>').click(function (e) {
+            e.preventDefault();
+
+            $(this).closest('form').submit();
+        });
+    });
+</script>

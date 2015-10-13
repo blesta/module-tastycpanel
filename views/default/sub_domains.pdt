@@ -1,0 +1,53 @@
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.subdomains");?> <button type="button" id="add_new" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+</div>
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><?php $this->_("tastycpanel.subdomain.subdomainandmaindomain");?></th>
+                <th><?php $this->_("tastycpanel.subdomain.documentroot");?></th>
+                <th><?php $this->_("tastycpanel.subdomain.redirection");?></th>
+                <th><?php $this->_("tastycpanel.options");?></th>
+            </tr>
+        </thead>
+        <tbody>
+     <?php 
+     if(count($subdomains_list) > 0 ) {
+     foreach ($subdomains_list as $key => $value) {
+    
+ ?>
+            <tr>
+                <td><?php $this->Html->_($subdomains_list[$key]->domain);?></td>
+                <td><?php $this->Html->_($subdomains_list[$key]->basedir);?></td>
+                <td><?php $this->Html->_($subdomains_list[$key]->status);?></td>
+                <td>  
+                            <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("domain", $this->Html->ifSet($subdomains_list[$key]->domain), array('id'=>"domain"));
+                            ?> 
+                    <button type="submit" name="delete_subdomain" class="btn btn-default btn-xs">
+                        <i class="fa fa-ban"></i> <?php $this->_("tastycpanel.delete");?>
+                    </button>
+                            <?php $this->Form->end(); ?>
+                </td>
+            </tr>
+				<?php
+     } } else {
+?>
+            <tr>
+                <td colspan="4" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+            </tr>
+            <?php
+     }			?>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#add_new").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/subdomains/addnew/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.subdomain");?>");
+                    });
+                });
+</script>

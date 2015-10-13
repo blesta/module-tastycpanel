@@ -1,0 +1,173 @@
+<div role="tabpanel">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#accounts_area" aria-controls="accounts_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.listaccounts");?></a></li>
+        <li role="presentation"><a href="#packages_area" aria-controls="packages_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.listaccounts.listpackage");?></a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="accounts_area">
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.listaccounts");?> <button type="button" id="acc_add_new" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.listaccounts.create");?></button></h4>
+</div>
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><?php $this->_("tastycpanel.listaccounts.domain");?></th>
+                <th><?php $this->_("tastycpanel.listaccounts.ip_address");?></th>
+                <th><?php $this->_("tastycpanel.listaccounts.username");?></th>
+                <th><?php $this->_("tastycpanel.listaccounts.setup_date");?></th>
+                <th><?php $this->_("tastycpanel.listaccounts.disk_used");?> / <?php $this->_("tastycpanel.listaccounts.quota");?></th>
+                <th><?php $this->_("tastycpanel.listaccounts.package");?></th>
+                <th><?php $this->_("tastycpanel.options");?></th>
+            </tr>
+        </thead>
+        <tbody>
+     <?php 
+     if(isset($acc_list) && is_array($acc_list) && count($acc_list) > 0 ) {
+     foreach ($acc_list as $key => $value) {
+    
+ ?>
+            <tr>
+                <td><?php $this->Html->_($acc_list[$key]->domain);?></td>
+                <td><?php $this->Html->_($acc_list[$key]->ip);?></td>
+                <td><?php $this->Html->_($acc_list[$key]->user);?></td>
+                <td><?php $this->Html->_($acc_list[$key]->startdate);?></td>
+                <td><?php $this->Html->_($acc_list[$key]->diskused);?> / <?php $this->Html->_($acc_list[$key]->disklimit);?></td>
+                <td><?php $this->Html->_($acc_list[$key]->plan);?></td>
+                <td>  
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.options");?>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li class="modify"><a href="javascript:void(0)" id="<?php echo $acc_list[$key]->user;?>"><?php $this->_("tastycpanel.listaccounts.modify");?></a></li>
+                            <li class="changepassword"><a href="javascript:void(0)" id="<?php echo $acc_list[$key]->user;?>"><?php $this->_("tastycpanel.listaccounts.changepassword");?></a></li>
+                                <?php if($acc_list[$key]->suspended == 0){ ?>
+						<?php
+						$this->Form->create();
+						$this->Form->fieldHidden("user", $this->Html->ifSet($acc_list[$key]->user));
+						?>
+                            <li><button class="buttonlink" name="suspend" type="submit"><?php $this->_("tastycpanel.listaccounts.suspend");?></button></li>
+						<?php
+						$this->Form->end();
+						?>
+                                <?php } else if($acc_list[$key]->suspended == 1){ ?>
+						<?php
+						$this->Form->create();
+						$this->Form->fieldHidden("user", $this->Html->ifSet($acc_list[$key]->user));
+						?>
+                            <li><button class="buttonlink" name="unsuspend" type="submit"><?php $this->_("tastycpanel.listaccounts.unsuspend");?></button></li>
+						<?php
+						$this->Form->end();
+						?>
+                                <?php } ?>
+
+                            <li class="terminate"><a href="javascript:void(0)" id="<?php echo $acc_list[$key]->user;?>"><?php $this->_("tastycpanel.listaccounts.terminate");?></a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+				<?php
+     } } else {
+?>
+            <tr>
+                <td colspan="7" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+            </tr>
+            <?php
+     }			?>
+        </tbody>
+    </table>
+</div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="packages_area">
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.listaccounts.listpackage");?> <button type="button" id="pkg_add_new" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+</div>
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><?php $this->_("tastycpanel.listaccounts.pkgname");?></th>
+                <th><?php $this->_("tastycpanel.options");?></th>
+            </tr>
+        </thead>
+        <tbody>
+     <?php 
+     if(isset($package_list) && is_array($package_list) && count($package_list) > 0 ) {
+     foreach ($package_list as $key => $value) {
+    
+ ?>
+            <tr>
+                <td><?php $this->Html->_($package_list[$key]->name);?></td>
+                <td>  
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.options");?>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li class="editpkg"><a href="javascript:void(0)" id="<?php echo $package_list[$key]->name;?>"><?php $this->_("tastycpanel.listaccounts.editpkg");?></a></li>
+						<?php
+						$this->Form->create();
+						$this->Form->fieldHidden("name", $this->Html->ifSet($package_list[$key]->name));
+						?>
+                            <li><button class="buttonlink" name="killpkg" type="submit"><?php $this->_("tastycpanel.listaccounts.deletepackage");?></button></li>
+						<?php
+						$this->Form->end();
+						?>
+
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+				<?php
+     } } else {
+?>
+            <tr>
+                <td colspan="7" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+            </tr>
+            <?php
+     }			?>
+        </tbody>
+    </table>
+</div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("li.modify a").click(function () {
+            var user = $(this).attr('id');
+            var url_get = "user=" + user;
+            doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/listaccounts/modify/";?>", "<?php $this->_("tastycpanel.listaccounts.modify_account");?>", url_get);
+        });
+        $("li.changepassword a").click(function () {
+            var user = $(this).attr('id');
+            var url_get = "user=" + user;
+            doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/listaccounts/changepassword/";?>", "<?php $this->_("tastycpanel.listaccounts.changepassword");?>", url_get);
+        });
+        $("li.terminate a").click(function () {
+            var user = $(this).attr('id');
+            var url_get = "user=" + user;
+            doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/listaccounts/terminate/";?>", "<?php $this->_("tastycpanel.listaccounts.terminate");?>", url_get);
+        });
+        $("li.editpkg a").click(function () {
+            var name = $(this).attr('id');
+            var url_get = "name=" + name;
+            doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/listaccounts/editpkg/";?>", "<?php $this->_("tastycpanel.listaccounts.editpkg");?>", url_get);
+        });
+        $("#pkg_add_new").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/listaccounts/addpkg/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.listaccounts.pkg");?>");
+        });
+        $("#acc_add_new").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/listaccounts/create/";?>", "<?php $this->_("tastycpanel.listaccounts.create");?>");
+        });
+    });
+</script>

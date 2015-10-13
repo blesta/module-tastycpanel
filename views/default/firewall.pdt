@@ -1,0 +1,20 @@
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.firewall");?></h4>
+</div>
+<?php $this->Form->create(); ?>
+<div class="pad">
+    <ul>
+        <li>
+					<?php
+        $this->Form->label($this->_("tastycpanel.ip", true)." - Your IP Address is {$client_ip}", "ip");
+        if($showIpInput === "show"){
+         $this->Form->fieldText("ip", $this->Html->ifSet($post['ip']), array("id"=>"ip"));
+        } else {
+            echo $client_ip;
+        }
+        ?>
+        </li>
+    </ul>
+</div>
+<p><button type="button" class="btn btn-primary" name="unblock"><?php $this->_("tastycpanel.unblockbutton");?></button></p>
+		<?php $this->Form->end(); ?>

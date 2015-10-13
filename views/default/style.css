@@ -1,0 +1,8 @@
+.label.module {display:block;line-height:15px;margin-top:5px;}
+.page-header {padding:0;margin:0;margin-bottom:10px;}
+.buttonlink {background:none;border:none;color:#252525;cursor:pointer;display:block;width:100%;text-align:left;padding-left:20px;font-size:14px;line-height:25px;}
+.buttonlink:hover{background:#F5F5F5;}
+.loginforms {display:block;max-width:705px;margin:auto;}
+.loginforms form {display:inline;margin-bottom:10px;}
+
+.loginforms button {margin-top:10px !important;margin-bottom:10px !important;}

@@ -1,0 +1,210 @@
+<div role="tabpanel">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#databases_area" aria-controls="databases_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.db.databases_area");?></a></li>
+        <li role="presentation"><a href="#users_area" aria-controls="users_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.db.users_area");?></a></li>
+        <li role="presentation"><a href="#hosts_area" aria-controls="hosts_area" role="tab" data-toggle="tab"><?php $this->_("tastycpanel.db.hosts_area");?></a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="databases_area">
+            <div class="page-header">
+                <h4><?php $this->_("tastycpanel.db.databases_area");?> <button type="button" id="addnewdb" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php $this->_("tastycpanel.db.database");?></th>
+                            <th><?php $this->_("tastycpanel.db.size");?></th>
+                            <th><?php $this->_("tastycpanel.db.privileged_users");?></th>
+                            <th><?php $this->_("tastycpanel.options");?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+     <?php 
+     if(count($databases_list) > 0 ) {
+     foreach ($databases_list as $key => $value) {
+    
+ ?>
+                        <tr>
+                            <td><?php $this->Html->_($databases_list[$key]->db);?></td>
+                            <td><?php $this->Html->_($databases_list[$key]->sizemeg);?> MB</td>
+                            <td>
+                                <table class="table">
+                                <?php 
+                            foreach ($databases_list[$key]->userlist as $uskey => $usvalue) {
+                                ?>
+                                    <tr>
+                                        <td class="nobrd">
+                                         <?php $this->Html->_($databases_list[$key]->userlist[$uskey]->user);?>
+                                        </td>    
+                                        <td class="nobrd">
+                                                <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("dbuser", $this->Html->ifSet($databases_list[$key]->userlist[$uskey]->user), array('id'=>"db"));
+                            $this->Form->fieldHidden("db", $this->Html->ifSet($databases_list[$key]->db), array('id'=>"db"));
+                            ?> 
+                                            <button type="submit" name="revoke_user" class="buttonlink btn-xs">
+                                                <i class="glyphicon glyphicon-trash"></i> <?php $this->_("tastycpanel.delete");?>
+                                            </button>
+                            <?php $this->Form->end(); ?>
+                                        </td>
+                                    </tr>
+                                <?php
+                            }
+                            
+                            ?>
+                                </table>
+                            </td>
+                            <td>  
+                                                <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("db", $this->Html->ifSet($databases_list[$key]->db), array('id'=>"db"));
+                            ?> 
+                                <button type="submit" name="delete_db" class="btn btn-default btn-xs">
+                                    <i class="fa fa-ban"></i> <?php $this->_("tastycpanel.delete");?>
+                                </button>
+                            <?php $this->Form->end(); ?>
+                            </td>
+                        </tr>
+				<?php
+     } } else {
+?>
+                        <tr>
+                            <td colspan="3" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+                        </tr>
+            <?php
+     }			?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="users_area">
+            <div class="page-header">
+                <h4><?php $this->_("tastycpanel.db.users_area");?> <button type="button" id="addnewdbuser" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php $this->_("tastycpanel.db.users_area");?></th>
+                            <th><?php $this->_("tastycpanel.options");?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+     <?php 
+     if(count($dbusers_list) > 0 ) {
+     foreach ($dbusers_list as $key => $value) {
+    
+ ?>
+                        <tr>
+                            <td><?php $this->Html->_($dbusers_list[$key]->user);?></td>
+                            <td>  
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-cogs"></i> <?php $this->_("tastycpanel.options");?>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li class="changepass"><a href="javascript:void(0)" id="<?php echo $dbusers_list[$key]->user;?>"><?php $this->_("tastycpanel.changepassword");?></a></li>
+                                        <li class="addusertodb"><a href="javascript:void(0)" id="<?php echo $dbusers_list[$key]->user;?>"><?php $this->_("tastycpanel.db.adduser_db");?></a></li>
+                            <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("dbuser", $this->Html->ifSet($dbusers_list[$key]->user), array('id'=>"dbuser"));
+                            ?> 
+                                        <li><button class="buttonlink" name="delete_dbuser" type="submit"><?php $this->_("tastycpanel.delete");?></button></li>
+                            <?php $this->Form->end(); ?>
+
+                                    </ul>
+                                </div>
+
+                            </td>
+                        </tr>
+				<?php
+     } } else {
+?>
+                        <tr>
+                            <td colspan="3" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+                        </tr>
+            <?php
+     }			?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div role="tabpanel" class="tab-pane" id="hosts_area">
+            <div class="page-header">
+                <h4><?php $this->_("tastycpanel.db.hosts_area");?> <button type="button" id="addnewremote" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php $this->_("tastycpanel.db.hosts_area");?></th>
+                            <th><?php $this->_("tastycpanel.options");?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+     <?php 
+     if(count($remotedb_list) > 0 ) {
+     foreach ($remotedb_list as $key => $value) {
+    
+ ?>
+                        <tr>
+                            <td><?php $this->Html->_($remotedb_list[$key]->host);?></td>
+                            <td>  
+                            <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("host", $this->Html->ifSet($remotedb_list[$key]->host), array('id'=>"host"));
+                            ?> 
+                                <button class="btn btn-default btn-xs" name="delete_host" type="submit"><?php $this->_("tastycpanel.delete");?></button>
+                            <?php $this->Form->end(); ?>
+
+
+                            </td>
+                        </tr>
+				<?php
+     } } else {
+?>
+                        <tr>
+                            <td colspan="3" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+                        </tr>
+            <?php
+     }			?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#addnewdb").click(function () {
+        doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/databases/addnewdb/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.db.database");?>");
+        });
+        $("#addnewdbuser").click(function () {
+        doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/databases/addnewdbuser/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.db.dbuser");?>");
+        });
+        $("#addnewremote").click(function () {
+        doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/databases/addnewremote/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.db.hosts_area");?>");
+        });
+        $("li.changepass a").click(function () {
+        var dbuser = $(this).attr('id');
+        var url_get = "dbuser=" + dbuser;
+        doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/databases/changepass/";?>", "<?php $this->_("tastycpanel.db.dbuser");?>", url_get);
+        });
+        $("li.addusertodb a").click(function () {
+        var dbuser = $(this).attr('id');
+        var url_get = "dbuser=" + dbuser;
+        doAjaxWithData("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/databases/addusertodb/";?>", "<?php $this->_("tastycpanel.db.dbuser");?>", url_get);
+        });
+        });
+</script>

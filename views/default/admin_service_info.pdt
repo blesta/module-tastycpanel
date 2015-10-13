@@ -1,0 +1,35 @@
+<table class="table">
+    <tr class="heading_row">
+        <td class="fixed_small center border_none"><span class="paymnt_arrow"></span></td>
+        <td class="border_left"><?php $this->_("tastycpanel.service.username");?></td>
+        <td><?php $this->_("tastycpanel.service.password");?></td>
+        <td><?php $this->_("tastycpanel.row.hostname");?></td>
+        <td class="last"><?php $this->_("tastycpanel.manage.module_rows_heading.options");?></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><?php $this->Html->_($service_fields->username);?></td>
+        <td><?php $this->Html->_($service_fields->password);?></td>
+        <td><?php $this->_("tastycpanel.row.hostname");?>: <a href="//<?php $this->Html->_($module_row->meta->hostname);?>" target="_blank"><?php $this->Html->_($module_row->meta->hostname);?></a> - <?php $this->_("tastycpanel.service.domain");?>: <a href="//<?php $this->Html->_($service_fields->domain_name);?>" target="_blank"><?php $this->Html->_($service_fields->domain_name);?></a></td>
+        <td>
+				<?php
+						$this->Form->create($this->Html->safe("https://" . $this->Html->ifSet($module_row->meta->hostname) . ":2083/login/"), array('target' => "_blank"));
+						$this->Form->fieldHidden("user", $this->Html->ifSet($service_fields->username));
+						$this->Form->fieldHidden("pass", $this->Html->ifSet($service_fields->password));
+				?>
+            <a id="cpanel_login<?php $this->Html->_($service->id);?>" href="#"><?php $this->_("tastycpanel.service.option_login");?></a>
+				<?php
+				$this->Form->end();
+				?>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#cpanel_login<?php $this->Html->_($service->id);?>').click(function (e) {
+            e.preventDefault();
+
+            $(this).closest('form').submit();
+        });
+    });
+</script>

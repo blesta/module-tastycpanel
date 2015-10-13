@@ -1,0 +1,55 @@
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.backups");?> <button type="button" id="add_new" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.generate_new");?></button></h4>
+</div>
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><?php $this->_("tastycpanel.backups.file");?></th>
+                <th><?php $this->_("tastycpanel.backups.time_completed");?></th>
+                <th><?php $this->_("tastycpanel.backups.status");?></th>
+                <th><?php $this->_("tastycpanel.options");?></th>
+            </tr>
+        </thead>
+        <tbody>
+     <?php 
+     if(count($backups_list) > 0 ) {
+     foreach ($backups_list as $key => $value) {
+    
+ ?>
+            <tr>
+                <td><?php $this->Html->_($backups_list[$key]->file);?></td>
+                <td><?php $this->Html->_($backups_list[$key]->localtime);?></td>
+                <td><?php $this->Html->_($backups_list[$key]->status);?></td>
+                <td>  
+	<?php
+						$this->Form->create($this->Html->safe("https://" . $this->Html->ifSet($module_row->meta->hostname) . ":2083/login/"), array('target' => "_blank"));
+						$this->Form->fieldHidden("user", $this->Html->ifSet($service_fields->username));
+						$this->Form->fieldHidden("pass", $this->Html->ifSet($service_fields->password));
+                                                $this->Form->fieldHidden("goto_uri", "/download?file={$backups_list[$key]->file}");
+						?>
+                    <button class="btn btn-default btn-xs" type="submit"><?php $this->_("tastycpanel.download");?></button>
+						<?php
+						$this->Form->end();
+						?>
+                </td>
+            </tr>
+				<?php
+     } } else {
+?>
+            <tr>
+                <td colspan="4" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+            </tr>
+            <?php
+     }			?>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#add_new").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/backups/addnew/";?>", "<?php $this->_("tastycpanel.generate_new");?> <?php $this->_("tastycpanel.backup");?>");
+                    });
+                });
+</script>

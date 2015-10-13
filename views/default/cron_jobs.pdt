@@ -1,0 +1,60 @@
+<div class="page-header">
+    <h4><?php $this->_("tastycpanel.cronjobs");?> <button type="button" id="add_new" class="btn btn-xs btn-default"><i class="fa fa-plus-circle"></i> <?php $this->_("tastycpanel.add_new");?></button></h4>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-curved table-striped">
+        <thead>
+            <tr>
+                <th><?php $this->_("tastycpanel.cronjob.min");?></th>
+                <th><?php $this->_("tastycpanel.cronjob.hour");?></th>
+                <th><?php $this->_("tastycpanel.cronjob.day");?></th>
+                <th><?php $this->_("tastycpanel.cronjob.month");?></th>
+                <th><?php $this->_("tastycpanel.cronjob.weekday");?></th>
+                <th><?php $this->_("tastycpanel.cronjob.command");?></th>
+                <th><?php $this->_("tastycpanel.options");?></th>
+            </tr>
+        </thead>
+        <tbody>
+     <?php 
+     if(count($cronjobs_list) > 0 ) {
+     foreach ($cronjobs_list as $key => $value) {
+    
+ ?>
+            <tr>
+                <td><?php $this->Html->_($cronjobs_list[$key]->minute);?></td>
+                <td><?php $this->Html->_($cronjobs_list[$key]->hour);?></td>
+                <td><?php $this->Html->_($cronjobs_list[$key]->day);?></td>
+                <td><?php $this->Html->_($cronjobs_list[$key]->month);?></td>
+                <td><?php $this->Html->_($cronjobs_list[$key]->weekday);?></td>
+                <td><code><?php $this->Html->_($cronjobs_list[$key]->command);?></code></td>
+                <td>  
+                            <?php 
+                            $this->Form->create();
+                            $this->Form->fieldHidden("line", $this->Html->ifSet($cronjobs_list[$key]->count), array('id'=>"line"));
+                            ?> 
+                    <button type="submit" name="delete_cronjob" class="btn btn-default btn-xs">
+                        <i class="fa fa-ban"></i> <?php $this->_("tastycpanel.delete");?>
+                    </button>
+                            <?php $this->Form->end(); ?>
+                </td>
+            </tr>
+				<?php
+     } } else {
+?>
+            <tr>
+                <td colspan="7" align="center"><?php $this->_("tastycpanel.no_results");?></td>
+            </tr>
+            <?php
+     }			?>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#add_new").click(function () {
+            doAjaxRmv("<?php echo $this->Html->_($this->base_uri, true) ."services/manage/".$service_id."/cronjobs/addnew/";?>", "<?php $this->_("tastycpanel.add_new");?> <?php $this->_("tastycpanel.cronjob");?>");
+                    });
+                });
+</script>
