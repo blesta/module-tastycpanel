@@ -2,7 +2,7 @@
 
 class Tastycpanelmodule extends Module {
 
-    private static $version = "2.3";
+    private static $version = "2.4.0";
     private static $authors = array(array('name' => "ModulesBakery.com.", 'url' => "http://www.modulesbakery.com"));
 
     public function __construct() {
