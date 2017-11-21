@@ -2,7 +2,7 @@
 
 class Tastycpanelmodule extends Module {
 
-    private static $version = "2.3";
+    private static $version = "2.4.0";
     private static $authors = array(array('name' => "ModulesBakery.com.", 'url' => "http://www.modulesbakery.com"));
 
     public function __construct() {
@@ -3923,7 +3923,7 @@ class Tastycpanelmodule extends Module {
             $typefield = $fields->fieldHidden("meta[type]", "standard");
             $fields->setField($typefield);
         }
-        if ($vars->meta['type'] === "reseller") {
+        if (isset($vars->meta['type']) && $vars->meta['type'] === "reseller") {
             $acl = $fields->label(Language::_("tastycpanel.package.acl", true), "acls");
             $acl->attach($fields->fieldSelect("meta[acls]", $acls, $this->Html->ifSet($vars->meta['acls']), array('id' => "acls")));
             $fields->setField($acl);
@@ -4003,7 +4003,7 @@ class Tastycpanelmodule extends Module {
         $manageapps->attach($fields->fieldSelect("meta[manageapps]", $manage_select, $this->Html->ifSet($vars->meta['manageapps']), array('id' => "manageapps")));
         $fields->setField($manageapps);
 
-        if ($vars->meta['type'] === "reseller") {
+        if (isset($vars->meta['type']) && $vars->meta['type'] === "reseller") {
             $whmfield = $fields->label(Language::_("tastycpanel.whm_login", true), "whm_login");
             $whmfield->attach($fields->fieldSelect("meta[whm_login]", $select_options, $this->Html->ifSet($vars->meta['whm_login']), array('id' => "whm_login")));
             $fields->setField($whmfield);
@@ -4242,7 +4242,42 @@ class Tastycpanelmodule extends Module {
         return $fields;
     }
 
-    public function validateService($package, array $vars = null, $edit = false) {
+    /**
+     * Attempts to validate service info. This is the top-level error checking method. Sets Input errors on failure.
+     *
+     * @param stdClass $package A stdClass object representing the selected package
+     * @param array $vars An array of user supplied info to satisfy the request
+     * @return bool True if the service validates, false otherwise. Sets Input errors when false.
+     */
+    public function validateService($package, array $vars = null)
+    {
+        $this->Input->setRules($this->getServiceRules($vars));
+        return $this->Input->validates($vars);
+    }
+
+    /**
+     * Attempts to validate an existing service against a set of service info updates. Sets Input errors on failure.
+     *
+     * @param stdClass $service A stdClass object representing the service to validate for editing
+     * @param array $vars An array of user-supplied info to satisfy the request
+     * @return bool True if the service update validates or false otherwise. Sets Input errors when false.
+     */
+    public function validateServiceEdit($service, array $vars = null)
+    {
+        $this->Input->setRules($this->getServiceRules($vars, true));
+        return $this->Input->validates($vars);
+    }
+
+    /**
+     * Returns the rule set for adding/editing a service
+     *
+     * @param array $vars A list of input vars
+     * @param bool $edit True to get the edit rules, false for the add rules
+     * @return array Service rules
+     */
+    private function getServiceRules(array $vars = null, $edit = false)
+    {
+
         $rules = array(
             'domain_name' => array(
                 'format' => array(
@@ -4256,23 +4291,12 @@ class Tastycpanelmodule extends Module {
             )
         );
 
-        $this->Input->setRules($rules);
-        return $this->Input->validates($vars);
-    }
+        if (!isset($vars['domain_name']) || strlen($vars['domain_name']) < 4) {
+            unset($rules['domain_name']['test']);
+        }
 
-    public function validateExistingService($package, array $vars = null, $edit = false) {
-        $rules = array(
-            'domain_name' => array(
-                'format' => array(
-                    'rule' => array(array($this, "hostnameValidator")),
-                    'message' => Language::_("tastycpanel.error.service.domain.format", true)
-                ),
-                'test' => array(
-                    'rule' => array("substr_compare", "test", 0, 4, true),
-                    'message' => Language::_("tastycpanel.error.service.domain.test", true)
-                )
-            ),
-            'username' => array(
+        if ($edit) {
+            $rules['username'] = array(
                 'format' => array(
                     'if_set' => true,
                     'rule' => array("matches", "/^[a-z]([a-z0-9])*$/i"),
@@ -4286,21 +4310,20 @@ class Tastycpanelmodule extends Module {
                 'length' => array(
                     'if_set' => true,
                     'rule' => array("betweenLength", 1, 8),
-                    'message' => Language::_("tastycpanel.error.service.username.test", true)
+                    'message' => Language::_("tastycpanel.error.service.username.length", true)
                 )
-            ),
-            'password' => array(
+            );
+            $rules['password'] = array(
                 'valid' => array(
                     'if_set' => true,
                     'rule' => array("isPassword", 8),
                     'message' => Language::_("tastycpanel.error.service.password.valid", true),
                     'last' => true
-                ),
-            )
-        );
+                )
+            );
+        }
 
-        $this->Input->setRules($rules);
-        return $this->Input->validates($vars);
+        return $rules;
     }
 
     private function generatePassword($min_length = 10, $max_length = 14) {
@@ -4492,7 +4515,7 @@ class Tastycpanelmodule extends Module {
         $whm = $this->getcPanelApi($module_row->meta->accesskey, $module_row->meta->hostname, $module_row->meta->username, $module_row->meta->use_ssl, false);
 
 
-        $this->validateExistingService($package, $vars);
+        $this->validateServiceEdit($service, $vars);
 
         if ($this->Input->errors())
             return;
